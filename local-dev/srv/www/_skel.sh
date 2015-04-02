@@ -20,7 +20,7 @@ then
 		$DOCROOT/$DOMAIN/log \
 		$DOCROOT/$DOMAIN/backup \
 		$DOCROOT/$DOMAIN/versions
-	chown -R _www:_www $DOCROOT/$DOMAIN/content $DOCROOT/$DOMAIN/log
+	sudo chown -R _www:_www $DOCROOT/$DOMAIN/content $DOCROOT/$DOMAIN/log
 else
 	echo "Document root $DOCROOT/$DOMAIN already exists."
 fi
@@ -31,8 +31,8 @@ fi
 if [ ! -f $CONFDIR/*-local.$DOMAIN.conf ]
 then
 	echo "Creating config file in $CONFDIR/$DOMAIN.conf"
-	cp $CONFDIR/_skel.conf.disabled $CONFDIR/25-local.$DOMAIN.conf
-	sed -ie "s/xxx.xxx/$DOMAIN/g" $CONFDIR/25-local.$DOMAIN.conf
+	sudo cp $CONFDIR/_skel.conf.disabled $CONFDIR/25-local.$DOMAIN.conf
+	sudo sed -ie "s/xxx.xxx/$DOMAIN/g" $CONFDIR/25-local.$DOMAIN.conf
 	echo -n "Apache control: "
 	/usr/sbin/apachectl configtest
 else
@@ -46,13 +46,13 @@ SQLUSER=$BASENAME
 SQLPASS=`mkpasswd -l 12 -s 0`
 
 SQLDB=${BASENAME}_local
-mysql -h 127.0.0.1 <<EOFMYSQL
+mysql -uroot -h 127.0.0.1 <<EOFMYSQL
 CREATE DATABASE $SQLDB;
 GRANT ALL PRIVILEGES ON $SQLDB.* TO '$SQLUSER'@'%' IDENTIFIED BY '$SQLPASS';
 FLUSH PRIVILEGES;
 EOFMYSQL
 
-OUTPUT=$DOMAIN/SERVER.info
+OUTPUT=$DOCROOT/$DOMAIN/SERVER.info
 echo "# Server details for $DOMAIN" > $OUTPUT
 echo DBNAME=$SQLDB >> $OUTPUT
 echo DBUSER=$SQLUSER >> $OUTPUT
@@ -61,7 +61,8 @@ echo DBPASS=$SQLPASS >> $OUTPUT
 cat $OUTPUT
 
 echo "Updating hosts file."
-echo "127.0.0.1 		local.$DOMAIN\n" >> /etc/hosts
+echo "127.0.0.1 		local.$DOMAIN
+" | sudo tee -a /etc/hosts
+# sudo sh -c 'echo "127.0.0.1 		local.${DOMAIN}\n" >> /etc/hosts'
 
-
-echo "All done."
+echo "All done. Please run sudo apachectl graceful to start using local.$DOMAIN."
