@@ -7,5 +7,6 @@ NameVirtualHost *:80
     CustomLog "/srv/www/xxx.xxx/log/access_log" common
 </VirtualHost>
 
-
-
+<Directory /srv/www/xxx.xxx/local>
+    Require all granted
+</Directory>
