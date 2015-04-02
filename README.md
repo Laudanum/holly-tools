@@ -13,3 +13,4 @@ Tools to bootstrap a new local dev website on OS X.
 * > hosts entry for local.example.com
 * `/usr/local/bin/mkpasswd`: Create a password suitable to use for MySQL. Used by `_skel.sh`
 * `/etc/apache2/other/_skel.conf.disabled`: A template for creating an Apache config file for a VirtualHost. Used by `_skel.sh`
+* `_remove-site.sh`: Reverses the actions of `_skel.sh`. Not symlinked anywhere as it is extremely destructive. Use with caution.
