@@ -31,8 +31,7 @@ fi
 if [ ! -f $CONFDIR/*-local.$DOMAIN.conf ]
 then
 	echo "Creating config file in $CONFDIR/$DOMAIN.conf"
-	sudo cp $CONFDIR/_skel.conf.disabled $CONFDIR/25-local.$DOMAIN.conf
-	sudo sed -ie "s/xxx.xxx/$DOMAIN/g" $CONFDIR/25-local.$DOMAIN.conf
+	sudo sed -e "s/xxx.xxx/$DOMAIN/g" $CONFDIR/_skel.conf.disabled | sudo tee $CONFDIR/25-local.$DOMAIN.conf > /dev/null
 	echo -n "Apache control: "
 	/usr/sbin/apachectl configtest
 else
