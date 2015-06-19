@@ -1,12 +1,15 @@
-NameVirtualHost *:80
 
-<VirtualHost *:80>
+<VirtualHost local.xxx.xxx:80>
     DocumentRoot "/srv/www/xxx.xxx/local"
     ServerName local.xxx.xxx
     ErrorLog "/srv/www/xxx.xxx/log/error_log"
     CustomLog "/srv/www/xxx.xxx/log/access_log" common
 </VirtualHost>
 
-<Directory /srv/www/xxx.xxx/local>
-    Require all granted
+
+<Directory "/srv/www/xxx.xxx/local/">
+	Options +Indexes +MultiViews
+	AllowOverride All
+	Order allow,deny
+	Allow from all
 </Directory>
