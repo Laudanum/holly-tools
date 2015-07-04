@@ -5,8 +5,9 @@ do
   dest=${src#.}
   src=`pwd`$dest
   echo "Linking $dest to $src"
-  if [ -f $dest ]
+  if [ -f $dest -o -h $dest ]
     then sudo rm $dest
   fi
   sudo ln -s $src $dest
 done
+
