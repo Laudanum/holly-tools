@@ -8,8 +8,13 @@
 
 
 <Directory "/srv/www/xxx.xxx/local/">
-	Options +Indexes +MultiViews
-	AllowOverride All
-	Order allow,deny
-	Allow from all
+    Options +Indexes +MultiViews
+    AllowOverride All
+    <IfVersion >= 2.4>
+        Require all granted
+    </IfVersion>
+    <IfVersion < 2.4>
+        Order allow,deny
+        Allow from all
+    </IfVersion>
 </Directory>
