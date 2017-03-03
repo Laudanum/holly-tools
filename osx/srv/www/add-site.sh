@@ -32,6 +32,23 @@ if [ ! -f $CONFDIR/*-local.$DOMAIN.conf ]
 then
 	echo "Creating config file in $CONFDIR/$DOMAIN.conf"
 	sudo sed -e "s/xxx.xxx/$DOMAIN/g" $CONFDIR/_skel.conf.disabled | sudo tee $CONFDIR/25-local.$DOMAIN.conf > /dev/null
+
+	# Server cert
+	# sudo mkdir /private/etc/apache2/ssl/
+	# cd /private/etc/apache2/
+	# sudo openssl req -new -x509 -days 365 -nodes -out server.crt -keyout server.key
+
+	# Site cert
+	cd /private/etc/apache2/ssl/
+	KEY=local.$DOMAIN.key
+	CSR=local.$DOMAIN.csr
+	CRT=local.$DOMAIN.crt
+	SUBJECT="/C=AU/ST=Sydney/L=Sydney/O=Holly/OU=Development/CN=local.$DOMAIN"
+	sudo ssh-keygen -f local.$DOMAIN.key -P "" -y
+	sudo openssl req -new -key $KEY -out $CSR -subj $SUBJECT
+	sudo openssl x509 -req -days 365 -in $CSR -signkey $KEY -out $CRT
+	sudo openssl rsa -in $KEY -out local.$DOMAIN.nopass.key
+
 	echo -n "Apache control: "
 	/usr/sbin/apachectl configtest
 else

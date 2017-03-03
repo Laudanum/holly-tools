@@ -6,6 +6,30 @@
     CustomLog "/srv/www/xxx.xxx/log/access_log" common
 </VirtualHost>
 
+<VirtualHost *:443>
+    #General setup for the virtual host
+    DocumentRoot "/srv/www/xxx.xxx/local"
+    ServerName local.xxx.xxx
+    ErrorLog "/srv/www/xxx.xxx/log/error_log"
+    CustomLog "/srv/www/xxx.xxx/log/access_log" common
+
+    #SSL Engine Switch:
+    SSLEngine on
+
+    #Server Certificate:
+    SSLCertificateFile "/private/etc/apache2/ssl/local.xxx.xxx.crt"
+
+    #Server Private Key:
+    SSLCertificateKeyFile "/private/etc/apache2/ssl/local.xxx.xxx.key"
+
+    #SSL Engine Options:
+    <FilesMatch "\.(cgi|shtml|phtml|php)$">
+        SSLOptions +StdEnvVars
+    </FilesMatch>
+    <Directory "/Library/WebServer/CGI-Executables">
+        SSLOptions +StdEnvVars
+    </Directory>
+</VirtualHost>
 
 <Directory "/srv/www/xxx.xxx/local/">
     Options +Indexes +MultiViews
