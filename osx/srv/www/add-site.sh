@@ -44,10 +44,9 @@ then
 	CSR=local.$DOMAIN.csr
 	CRT=local.$DOMAIN.crt
 	SUBJECT="/C=AU/ST=Sydney/L=Sydney/O=Holly/OU=Development/CN=local.$DOMAIN"
-	sudo ssh-keygen -f local.$DOMAIN.key -P "" -y
-	sudo openssl req -new -key $KEY -out $CSR -subj $SUBJECT
-	sudo openssl x509 -req -days 365 -in $CSR -signkey $KEY -out $CRT
-	sudo openssl rsa -in $KEY -out local.$DOMAIN.nopass.key
+	sudo openssl genrsa -out $KEY 2048
+	sudo openssl req -new -x509 -key $KEY -out $CRT -days 3650 -subj $SUBJECT
+	sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /etc/apache2/ssl/$CRT
 
 	echo -n "Apache control: "
 	/usr/sbin/apachectl configtest
